@@ -378,7 +378,7 @@ class PostAdmin(PlaceholderAdminMixin, FrontendEditableAdminMixin,
         if sites.exists():
             pks = list(sites.all().values_list('pk', flat=True))
             qs = qs.filter(sites__in=pks)
-        return qs.distinct()
+        return super().get_queryset(request).filter(pk__in=qs.values_list("pk", flat=True))
 
     def save_related(self, request, form, formsets, change):
         if self.get_restricted_sites(request).exists():
@@ -460,14 +460,6 @@ class BlogConfigAdmin(BaseAppHookConfig, TranslatableAdmin):
             ('Twitter', {
                 'fields': (
                     'config.twitter_type', 'config.twitter_site', 'config.twitter_author',
-                ),
-                'description': _(
-                    'You can provide plain strings, Post model attribute or method names'
-                )
-            }),
-            ('Google+', {
-                'fields': (
-                    'config.gplus_type', 'config.gplus_author',
                 ),
                 'description': _(
                     'You can provide plain strings, Post model attribute or method names'
