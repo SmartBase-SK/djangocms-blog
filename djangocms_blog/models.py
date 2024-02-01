@@ -30,7 +30,8 @@ from sortedm2m.fields import SortedManyToManyField
 from taggit_autosuggest.managers import TaggableManager
 
 from .cms_appconfig import BlogConfig
-from .fields import AutoSlugField, slugify
+from django.utils.text import slugify
+from .fields import AutoSlugField
 from .managers import GenericDateTaggedManager
 from .settings import get_setting
 

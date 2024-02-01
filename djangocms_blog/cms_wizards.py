@@ -11,7 +11,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from .cms_appconfig import BlogConfig
-from .fields import slugify
+from django.utils.text import slugify
 from .forms import PostAdminFormBase
 from .models import Post
 
