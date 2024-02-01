@@ -57,12 +57,6 @@ class BlogCategoryAdmin(SortableAdminMixin, ModelAppHookConfig, TranslatableAdmi
         'name', 'parent', 'app_config', 'all_languages_column',
     ]
 
-    def get_prepopulated_fields(self, request, obj=None):
-        app_config_default = self._app_config_select(request, obj)
-        if app_config_default is None and request.method == 'GET':
-            return {}
-        return {'slug': ('name',)}
-
     class Media:
         css = {
             'all': ('%sdjangocms_blog/css/%s' % (settings.STATIC_URL, 'djangocms_blog_admin.css'),)
@@ -365,9 +359,6 @@ class PostAdmin(PlaceholderAdminMixin, FrontendEditableAdminMixin,
         if callable(filter_function):
             fsets = filter_function(fsets, request, obj=obj)
         return fsets
-
-    def get_prepopulated_fields(self, request, obj=None):
-        return {'slug': ('title',)}
 
     def save_model(self, request, obj, form, change):
         obj._set_default_author(request.user)
