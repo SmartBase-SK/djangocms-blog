@@ -6,6 +6,7 @@ from copy import deepcopy
 from aldryn_apphooks_config.admin import BaseAppHookConfig, ModelAppHookConfig
 from cms.admin.placeholderadmin import FrontendEditableAdminMixin, PlaceholderAdminMixin
 from cms.models import CMSPlugin, ValidationError
+from adminsortable2.admin import SortableAdminMixin
 from django.apps import apps
 from django.conf import settings
 from django.urls import re_path
@@ -50,7 +51,7 @@ class SiteListFilter(admin.SimpleListFilter):
 
 
 @admin.register(BlogCategory)
-class BlogCategoryAdmin(ModelAppHookConfig, TranslatableAdmin):
+class BlogCategoryAdmin(SortableAdminMixin, ModelAppHookConfig, TranslatableAdmin):
     form = CategoryAdminForm
     list_display = [
         'name', 'parent', 'app_config', 'all_languages_column',

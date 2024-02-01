@@ -95,7 +95,7 @@ class BlogCategory(BlogMetaMixin, TranslatableModel):
         on_delete=models.SET_NULL
     )
 
-    order_by = models.PositiveIntegerField(default=0, blank=False, null=False)
+    order_by = models.PositiveIntegerField(default=0, blank=False, null=False, db_index=True)
 
     import_id = models.IntegerField(
         null=True,
@@ -145,6 +145,7 @@ class BlogCategory(BlogMetaMixin, TranslatableModel):
     class Meta:
         verbose_name = _('blog category')
         verbose_name_plural = _('blog categories')
+        ordering = ("order_by",)
 
     def descendants(self):
         children = []
