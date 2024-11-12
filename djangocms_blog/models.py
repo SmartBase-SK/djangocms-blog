@@ -614,7 +614,7 @@ class BasePostPlugin(CMSPlugin):
         :param qs: queryset to optimize
         :return: optimized queryset
         """
-        return qs.select_related('app_config').prefetch_related(
+        return qs.select_related('app_config', 'main_image').prefetch_related(
             'translations', 'categories', 'categories__translations', 'categories__app_config'
         )
 
