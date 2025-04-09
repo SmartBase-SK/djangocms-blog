@@ -21,10 +21,11 @@ from django.views.generic import DetailView, ListView
 from parler.views import TranslatableSlugMixin, ViewUrlMixin
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.models import ContentType
 
 from .models import BlogCategory, Post
 from .utils import is_ajax
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from .settings import get_setting
 from django.conf import settings
 User = get_user_model()
@@ -236,7 +237,21 @@ class TaggedListView(BaseBlogListView, ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return self.optimize(qs.filter(tags__slug=self.kwargs['tag'], tags__language_code=self.request.LANGUAGE_CODE))
+        tag_slug = self.kwargs["tag"]
+        lang_code = self.request.LANGUAGE_CODE
+        model = qs.model
+        tag = Tag.objects.filter(slug=tag_slug, language_code=lang_code).first()
+
+        if tag:
+            content_type = ContentType.objects.get_for_model(model)
+            object_ids = TaggedItem.objects.filter(
+                tag=tag,
+                content_type=content_type
+            ).values_list("object_id", flat=True)
+
+            return self.optimize(qs.filter(pk__in=object_ids))
+        else:
+            return self.optimize(qs.none())
 
     def get_context_data(self, **kwargs):
         kwargs['tagged_entries'] = (self.kwargs.get('tag')
