@@ -5,7 +5,8 @@ import os.path
 
 from aldryn_apphooks_config.mixins import AppConfigMixin
 from cms.models.fields import PlaceholderField
-from cms.utils import get_language_list, copy_plugins
+from cms.utils import get_language_list
+from cms.api import copy_plugins_to_language
 from dal import autocomplete
 from django.apps import apps
 from django.contrib.auth import get_user_model
@@ -345,11 +346,12 @@ def copy_language(request, post_id):
     for field in Post._meta.get_fields():
         if type(field) is PlaceholderField:
             placeholders.append(field.name)
-    for placeholder_field_name in placeholders:
-        placeholder = getattr(post, placeholder_field_name)
-        if not placeholder:
-            continue
-        plugins = list(
-            placeholder.cmsplugin_set.filter(language=source_language).order_by('path'))
-        copy_plugins.copy_plugins_to(plugins, placeholder, target_language)
+    # TODO needs to be rewritten later into copy_plugins_to_language using Page
+    # for placeholder_field_name in placeholders:
+    #     placeholder = getattr(post, placeholder_field_name)
+    #     if not placeholder:
+    #         continue
+    #     plugins = list(
+    #         placeholder.cmsplugin_set.filter(language=source_language).order_by('path'))
+    #     copy_plugins_to_language(plugins, placeholder, target_language)
     return HttpResponse("ok")
