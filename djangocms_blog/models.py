@@ -590,6 +590,14 @@ class Post(KnockerModel, BlogMetaMixin, TranslatableModel):
         return serialized
 
 
+def get_default_template_folder():
+    return BLOG_PLUGIN_TEMPLATE_FOLDERS[0][0]
+
+
+def get_choices_template_folder():
+    return BLOG_PLUGIN_TEMPLATE_FOLDERS
+
+
 class BasePostPlugin(CMSPlugin):
     app_config = AppHookConfigField(
         BlogConfig, null=True, verbose_name=_('app. config'), blank=True
@@ -599,10 +607,10 @@ class BasePostPlugin(CMSPlugin):
     )
     template_folder = models.CharField(
         max_length=200,
-        verbose_name=_('Plugin template'),
-        help_text=_('Select plugin template to load for this instance'),
-        default=BLOG_PLUGIN_TEMPLATE_FOLDERS[0][0],
-        choices=BLOG_PLUGIN_TEMPLATE_FOLDERS
+        verbose_name=_("Plugin template"),
+        help_text=_("Select plugin template to load for this instance"),
+        default=get_default_template_folder,
+        choices=get_choices_template_folder,
     )
 
     class Meta:
